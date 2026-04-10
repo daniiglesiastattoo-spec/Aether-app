@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#07090f;color:#c8d8f0;font-family:monospace;margin:0;padding:10px}
+#chat{min-height:300px;margin-bottom:10px}
+.u{color:#00e5b0;margin:5px 0}
+.a{color:#fff;margin:5px 0;padding:8px;background:#111622;border-radius:8px}
+input{width:75%;padding:10px;background:#111622;color:#fff;border:1px solid #333;border-radius:8px;font-size:16px}
+button{width:20%;padding:10px;background:#00e5b0;color:#000;border:none;border-radius:8px;font-size:16px;font-weight:bold}
+</style>
+</head>
+<body>
+<div id="chat"><div class="a">Hola, soy AETHER. Escribe algo.</div></div>
+<div>
+<input type="text" id="inp" placeholder="Escribe aqui...">
+<button onclick="send()">▶</button>
+</div>
+<script>
+function send(){
+  var txt=document.getElementById('inp').value.trim();
+  if(!txt)return;
+  document.getElementById('inp').value='';
+  var chat=document.getElementById('chat');
+  chat.innerHTML+='<div class="u">Tú: '+txt+'</div>';
+  chat.innerHTML+='<div class="a" id="r">pensando...</div>';
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST','http://localhost:5000/chat',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.onload=function(){
+    var d=JSON.parse(xhr.responseText);
+    document.getElementById('r').textContent='AETHER: '+d.output;
+    document.getElementById('r').id='';
+  };
+  xhr.send(JSON.stringify({message:txt}));
+}
+</script>
+</body>
+</html>
